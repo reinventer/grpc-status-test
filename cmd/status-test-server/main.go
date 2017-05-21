@@ -6,7 +6,7 @@ import (
 	"net"
 
 	anypb "github.com/golang/protobuf/ptypes/any"
-	spb "github.com/google/go-genproto/googleapis/rpc/status"
+	spb "google.golang.org/genproto/googleapis/rpc/status"
 	pb "github.com/reinventer/grpc-status-test/status"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
@@ -55,7 +55,7 @@ func main() {
 		log.Fatalf(`failed to listen: %v`, err)
 	}
 	s := grpc.NewServer()
-	pb.RegisterStatusServer(s, &server{})
+	pb.RegisterTestErrorServer(s, &server{})
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf(`failed to serve: %v`, err)
 	}

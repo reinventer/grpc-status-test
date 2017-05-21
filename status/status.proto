@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package status;
 
-service Status {
+service TestError {
     rpc GetError(Empty) returns (Empty) {}
 }
 
