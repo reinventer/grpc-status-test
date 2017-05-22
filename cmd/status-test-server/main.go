@@ -1,52 +1,29 @@
 package main
 
 import (
-	"errors"
 	"log"
 	"net"
 
 	anypb "github.com/golang/protobuf/ptypes/any"
-	spb "google.golang.org/genproto/googleapis/rpc/status"
 	pb "github.com/reinventer/grpc-status-test/status"
 	"golang.org/x/net/context"
+	spb "google.golang.org/genproto/googleapis/rpc/status"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type server struct{}
 
-// SayHello implements helloworld.GreeterServer
 func (s *server) GetError(ctx context.Context, in *pb.Empty) (*pb.Empty, error) {
-	return &pb.Empty{}, &status{}
-}
-
-type status struct{}
-
-func (s *status) Error() string {
-	return `error`
-}
-
-func (s *status) Code() codes.Code {
-	return codes.InvalidArgument
-}
-
-func (s *status) Proto() *spb.Status {
-	return &spb.Status{
+	ss := &spb.Status{
 		Code:    int32(codes.InvalidArgument),
-		Message: `status message`,
+		Message: `st message`,
 		Details: []*anypb.Any{{
 			TypeUrl: `type`,
 			Value:   []byte(`test`),
-		}},
-	}
-}
-
-func (s *status) Message() string {
-	return `message`
-}
-
-func (s *status) Err() error {
-	return errors.New(`err`)
+		}}}
+	return &pb.Empty{}, status.FromProto(ss).Err()
 }
 
 func main() {
@@ -56,6 +33,7 @@ func main() {
 	}
 	s := grpc.NewServer()
 	pb.RegisterTestErrorServer(s, &server{})
+	log.Println(`Server started`)
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf(`failed to serve: %v`, err)
 	}
