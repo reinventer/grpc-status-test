@@ -1,6 +1,6 @@
 # gRPC status test
 
-Example of grpc status usage
+Example of gRPC status usage.
 
 Install:
 ```
@@ -12,7 +12,7 @@ Launch server:
 $ status-test-server
 ```
 
-In another console run client:
+Run client in another console:
 ```
 $ status-test-client
 ```
